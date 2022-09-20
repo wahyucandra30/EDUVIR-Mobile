@@ -1,18 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class SelectableButton : MonoBehaviour
+public class SelectableButton : MonoBehaviour, ICrosshairSelectable
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private UnityEvent hoverEvent;
+    [SerializeField] private UnityEvent selectEvent;
+    [SerializeField] private UnityEvent unhoverEvent;
+    private void Start()
     {
-        
     }
-
-    // Update is called once per frame
-    void Update()
+    public void Hover()
     {
-        
+        hoverEvent.Invoke();
+    }
+    public void Unhover()
+    {
+        unhoverEvent.Invoke();
+    }
+    public void Select()
+    {
+        selectEvent.Invoke();
     }
 }
