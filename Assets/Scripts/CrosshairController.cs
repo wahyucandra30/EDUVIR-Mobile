@@ -8,10 +8,15 @@ public class CrosshairController : MonoBehaviour
 {
     private Camera cam;
     private GameObject highlightedObject = null;
+    private Transform trans;
+    private Ray ray;
+    [SerializeField] private float rayDistance = 50f;
     [SerializeField] private LayerMask layerMask;
+
     private void Start()
     {
         cam = GetComponent<Camera>();
+        trans = cam.transform;
     }
     private void Update()
     {
@@ -19,15 +24,12 @@ public class CrosshairController : MonoBehaviour
         {
             if (Input.touchCount > 0)
             {
-                if (EventSystem.current.IsPointerOverGameObject())
-                {
-                    EventSystem.current.currentSelectedGameObject.SetActive(false);
-                    return;
-                }
                 highlightedObject.GetComponent<ICrosshairSelectable>()?.Select();
+                highlightedObject = null;
             }
         }
-        if (Physics.Raycast(cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0)), out RaycastHit hitInfo, float.MaxValue, layerMask.value))
+        ray = new Ray(trans.position, trans.forward);
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, rayDistance, layerMask.value))
         {
             if (highlightedObject)
             {
